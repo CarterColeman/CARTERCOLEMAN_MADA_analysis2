@@ -25,9 +25,13 @@ rawdata <- readxl::read_excel(data_location)
 View(rawdata)
 
 #Filtering and selecting wanted Georgia data. The objective is to grab data for changes in proportion of vaccine hesitant and unsure with different demographic factors. 
-processeddata <- rawdata %>% dplyr::select("State", "County Name", "Estimated hesitant", "Estimated hesitant or unsure", "Estimated strongly hesitant", "Social Vulnerability Index (SVI)", "CVAC Level Of Concern", "Percent adults fully vaccinated against COVID-19 (as of 6/10/21)")%>%
-  dplyr::filter( State != "GEORGIA" )
+processeddata <- rawdata %>% 
+  dplyr::select("State", "County Name", "Estimated hesitant", "Estimated hesitant or unsure", "Estimated strongly hesitant", "Social Vulnerability Index (SVI)", "CVAC Level Of Concern", "Percent adults fully vaccinated against COVID-19 (as of 6/10/21)")%>%
+  dplyr::filter( State == "GEORGIA" )
                              
+#View processed data.
+View(processeddata)
+
 
 # save data as RDS
 
