@@ -8,6 +8,7 @@
 library(ggplot2) #for plotting
 library(broom) #for cleaning up output from lm()
 library(here) #for data loading/saving
+library(tidyverse)
 
 #path to data
 #note the use of the here() package and not absolute paths
@@ -28,42 +29,65 @@ mysummary = summary(mydata)
 
 #look at summary
 print(mysummary)
+print(mydata$`County Name`)
 
-#do the same, but with a bit of trickery to get things into the 
-#shape of a data frame (for easier saving/showing in manuscript)
-summary_df = data.frame(do.call(cbind, lapply(mydata, summary)))
+#make a scatter plot of the estimate hesitant of getting the vaccine with Social Vulnerability index.
+#we also add a linear regression line to it with labels for the lowest combination of SVI and hesitance.
+plot1 <- mydata %>% ggplot(aes(x=`Social Vulnerability Index (SVI)`, y = `Estimated hesitant or unsure`, label=`County Name`)) + 
+  geom_point() + geom_smooth(method='lm') + 
+  geom_text(aes(label=ifelse(`Social Vulnerability Index (SVI)` < 0.30 & `Estimated hesitant or unsure` < 0.19 ,as.character(`County Name`),'')),hjust=0,vjust=0) +
+  ggtitle("Scatterplot of Hesitance and SVI")
+
+#Scatterplot of Vaccinated adults and hesitance for each county in Georgia showing an outlier county
+#with a linear regression line
+plot2 <- mydata %>% ggplot(aes(x= `Percent adults fully vaccinated against COVID-19 (as of 6/10/21)` , y = `Estimated hesitant or unsure`, label=`County Name`)) + 
+  geom_point() + geom_smooth(method='lm') +  
+  geom_text(aes(label=ifelse(`Percent adults fully vaccinated against COVID-19 (as of 6/10/21)` > 0.75 ,as.character(`County Name`),'')),hjust=0.9,vjust=0.24) + 
+  ggtitle("Scatterplot of percentages of adults vaccinated per county and hesitance")
+
+#Scatterplot of Vaccinated adults and hesitance for each county in Georgia without the outlier. There is a labeling of
+#counties with the highest percentage of adults fully vaccinated.
+plot3 <- mydata %>% filter(`Percent adults fully vaccinated against COVID-19 (as of 6/10/21)`<= 0.95) %>%
+  ggplot(aes(x= `Percent adults fully vaccinated against COVID-19 (as of 6/10/21)` , y = `Estimated hesitant or unsure`, label=`County Name`)) + 
+  geom_point() + geom_smooth(method='lm') +  
+  geom_text(aes(label=ifelse(`Percent adults fully vaccinated against COVID-19 (as of 6/10/21)` > 0.35 ,as.character(`County Name`),'')),hjust=0.5,vjust=0) + 
+  ggtitle("Scatterplot of percentages of adults vaccinated per county and hesitance removing outlier")
+
+#Boxplot of hesitance for each CVAC level
+plot4 <- mydata %>% ggplot(aes(x= `CVAC Level Of Concern`, y = `Estimated hesitant or unsure`)) + geom_boxplot() +
+  ggtitle("Side-by-side boxplots of hesitance by CVAC level of Concern")
+
+#Summary table of hesitance groups by the CVAC level of concern. This includes the means and the standard deviation. 
+hesitancetable <- mydata %>% select(`Estimated hesitant or unsure`, `CVAC Level Of Concern`) %>% group_by(`CVAC Level Of Concern`) %>%
+  summarize(average = mean(`Estimated hesitant or unsure`), standard_deviation = sd(`Estimated hesitant or unsure`))
+
 
 #save data frame table to file for later use in manuscript
 summarytable_file = here("results", "summarytable.rds")
-saveRDS(summary_df, file = summarytable_file)
+saveRDS(mysummary, file = summarytable_file)
+
+#save hesitance and CVAC table to file for later use in manuscript
+hesitancesummarytable_file = here("results", "hesitancesummarytable.rds")
+saveRDS(hesitancetable, file = hesitancesummarytable_file)
 
 
-#make a scatterplot of data
-#we also add a linear regression line to it
-p1 <- mydata %>% ggplot(aes(x=Height, y=Weight)) + geom_point() + geom_smooth(method='lm')
+#look at figure1
+plot(plot1)
 
-#look at figure
-plot(p1)
+#save plot1
+figure1_file = here("results","figure1.png")
+ggsave(filename = figure1_file, plot=plot1) 
 
-#save figure
-figure_file = here("results","resultfigure.png")
-ggsave(filename = figure_file, plot=p1) 
+#save plot2
+figure2_file = here("results","figure2.png")
+ggsave(filename = figure2_file, plot=plot2) 
 
-######################################
-#Data fitting/statistical analysis
-######################################
+#save plot3
+figure3_file = here("results","figure3.png")
+ggsave(filename = figure3_file, plot=plot3) 
 
-# fit linear model
-lmfit <- lm(Weight ~ Height, mydata)  
-
-# place results from fit into a data frame with the tidy function
-lmtable <- broom::tidy(lmfit)
-
-#look at fit results
-print(lmtable)
-
-# save fit results table  
-table_file = here("results", "resulttable.rds")
-saveRDS(lmtable, file = table_file)
+#save plot4
+figure4_file = here("results","figure4.png")
+ggsave(filename = figure4_file, plot=plot4) 
 
   
