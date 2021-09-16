@@ -57,16 +57,18 @@ _To get some further insight into your data, if reasonable you could compute sim
 
 Table \@ref(tab:summarytable) shows a table summarizing the data.
 
+
 ```{r summarytable,  echo=FALSE}
-summarytable=readRDS("../../results/summarytable.rds")
-knitr::kable(summarytable)
+resulttable=readRDS("../../results/summarytable.rds")
+knitr::kable(resulttable, caption = 'Data summary table.')
 ```
+
 
 Table \@ref(tab:hesitancesummarytable) shows a hesitance and CVAC table.
 
 ```{r hesitancesummarytable,  echo=FALSE}
 hesitancesummarytable=readRDS("../../results/hesitancesummarytable.rds")
-knitr::kable(hesitancesummarytable)
+knitr::kable(hesitancesummarytable, caption = 'Hesitance and CVAC Table')
 ```
 
 
