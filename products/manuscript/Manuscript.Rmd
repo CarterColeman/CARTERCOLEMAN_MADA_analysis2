@@ -64,23 +64,42 @@ knitr::kable(resulttable, caption = 'Data summary table.')
 ```
 
 
-Figure \@ref(fig:resultfigure) shows a scatterplot figure produced by one of the R scripts.
+Table \@ref(tab:hesitancesummarytable) shows a hesitance and CVAC table.
 
-```{r resultfigure,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/resultfigure.png")
+```{r hesitancesummarytable,  echo=FALSE}
+hesitancesummarytable=readRDS("../../results/hesitancesummarytable.rds")
+knitr::kable(hesitancesummarytable, caption = 'Hesitance and CVAC Table')
+```
+
+
+Figure \@ref(fig:figure1) shows a scatterplot for the estimate hesitant of getting the vaccine with Social Vulnerability index.
+
+```{r figure1,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure1.png")
+```
+
+Figure \@ref(fig:figure2) shows a scatterplot for Vaccinated adults and hesitance for each county in Georgia showing an outlier county.
+
+```{r figure2,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure2.png")
+```
+
+Figure \@ref(fig:figure3) shows a scatterplot for Vaccinated adults and hesitance for each county in Georgia without the outlier.
+
+```{r figure3,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure3.png")
+```
+
+Figure \@ref(fig:figure4) shows a Boxplot of hesitance for each CVAC level.
+
+```{r figure4,  fig.cap='Analysis figure.', echo=FALSE}
+knitr::include_graphics("../../results/figure4.png")
 ```
 
 
 ## Full analysis
 
 _Use one or several suitable statistical/machine learning methods to analyze your data and to produce meaningful figures, tables, etc. This might again be code that is best placed in one or several separate R scripts that need to be well documented. You want the code to produce figures and data ready for display as tables, and save those. Then you load them here._
-
-Example table \@ref(tab:resulttable) shows a table summarizing a linear model fit.
-
-```{r resulttable,  echo=FALSE}
-resulttable=readRDS("../../results/resulttable.rds")
-knitr::kable(resulttable, caption = 'Linear model fit table.')
-```
 
 
 # Discussion
